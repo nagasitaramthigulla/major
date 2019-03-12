@@ -1,0 +1,61 @@
+<html>
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+    <script>
+        console.log(jsondata);
+        var state = {};
+        google.charts.load("current", {
+            packages: ['corechart', 'geochart'],
+            mapsApiKey: 'AIzaSyC4v1_2RvSAOo9n_7YX_uBw5EsBYtqdlhY',
+        });
+
+        function drawDonut() {
+            var data = google.visualization.arrayToDataTable(state.counts);
+            var options = {
+                title: 'Positive vs Negative',
+                pieHole: 0.5,
+                slices: {
+                    0: { color: 'red' },
+                    1: { color: 'green' }
+                }
+            };
+            var chart = new google.visualization.PieChart(document.getElementById("donutchart"));
+            chart.draw(data, options);
+        }
+        function drawMap() {
+            var data = google.visualization.arrayToDataTable(state.map);
+            var options = {
+                title: 'Geo distribution of polarity',
+                displayMode: 'markers',
+                colorAxis: { colors: ['red', 'green'] }
+            };
+            var chart = new google.visualization.GeoChart(document.getElementById('map'));
+            chart.draw(data, options);
+
+        }
+        // drawDonut();
+        // drawMap();
+    
+
+        $.getJSON("http://" + document.domain + ":" + location.port + "/results/{{id}}.json", (json) => {
+            state = json;
+            console.log(state);
+
+            google.charts.setOnLoadCallback(drawDonut);
+            google.charts.setOnLoadCallback(drawMap);
+
+        })
+    </script>
+
+</head>
+
+<body>
+    <div id="donutchart" style="width: 900px; height: 500px;"></div>
+    <div id="map" style="width: 900px; height: 500px;"></div>
+</body>
+
+</html>

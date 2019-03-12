@@ -1,0 +1,88 @@
+<html>
+
+<head>
+
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+    <script type="text/javascript" charset="utf-8">
+        var socket = io.connect('http://' + document.domain + ':' + location.port);
+        function makeid() {
+            var text = "";
+            var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+            for (var i = 0; i < 15; i++)
+                text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+            return text;
+        }
+
+        hash = makeid();
+        socket.on('connect', function () {
+            socket.emit('connected', { message: 'I\'m connected!', hash: hash });
+        });
+
+    </script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col s12">
+                <div class="card white">
+                    <div class="card-content">
+                        <div class="row">
+                            <div class="input-field col s6">
+                                <input type="text" id="text" class="validate"
+                                    placeholder="Enter your Search query here" />
+                                <label for="text">Query</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s6">
+                                <button class="waves-effect waves-light btn orange darken-3"
+                                    onclick="sendJson()">Send</button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <textarea disabled id="message" style="height:10rem"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const sendJson = () => {
+            var textel = document.getElementById("text");
+            var text=textel.value;
+            textel.value="";
+            socket.emit('json', { message: text, hash: hash });
+        }
+
+        text = document.getElementById('text');
+        text.addEventListener('keydown', (e) => {
+            if (e.keyCode == 13) {
+                sendJson();
+            }
+        });
+
+        socket.on('json', (res) => {
+            ta = document.getElementById("message");
+            ta.value = res.message + "\n" + ta.value;
+        });
+
+        socket.on('result', (res) => {
+            id = res.id;
+            window.open('http://localhost:8000/res/' + id);
+        });
+
+    </script>
+</body>
+
+</html>
