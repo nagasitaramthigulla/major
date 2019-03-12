@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request,send_from_directory
 from flask_socketio import SocketIO
-from flask_sqlalchemy import SQLAlchemy
 
 import os
 import json
