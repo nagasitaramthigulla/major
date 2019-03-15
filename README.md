@@ -15,3 +15,6 @@ then run the following command
 open locahost:8000 in browser
 
 in the query feild search for any keyword
+
+
+note: internet connection is required
