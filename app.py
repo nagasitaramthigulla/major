@@ -7,7 +7,7 @@ import json
 CWD=os.getcwd()
 os.environ['CWD']=CWD
 
-from actionThread import ThreadPool
+from actionThread import ThreadPool,CleanerThread
 
 import logging
 log = logging.getLogger('werkzeug')
@@ -15,6 +15,8 @@ log.setLevel(logging.ERROR)
 
 
 threadPool=ThreadPool(3)
+cl=CleanerThread()
+cl.start()
 
 app = Flask(__name__,template_folder='template')
 print(__name__)
@@ -23,9 +25,9 @@ print(__name__)
 def webprint():
     return render_template('socket_client.html') 
 
-@app.route('/images/pie/<path:path>')
+@app.route('/images/<path:path>')
 def send_js(path):
-    return send_from_directory(CWD+'\images\pie', path)
+    return send_from_directory(CWD+'\images', path)
 
 @app.route('/res/<id>')
 def display(id):

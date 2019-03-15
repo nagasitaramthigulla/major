@@ -10,7 +10,7 @@ from sentiment.model import get_model2 as get_model
 import numpy as np
 import asyncio
 from tweetCrawler.crawler import Crawler #,get_tweets
-import os
+import os,time
 
 CWD=os.environ['CWD']
 
@@ -24,6 +24,13 @@ import datetime
 
 import time
 import json
+import re
+from wordcloud import  WordCloud
+
+def preprocess(text):
+    text=str(text).lower()
+    text=re.sub('[^a-zA-Z0-9\s]',"",text)
+    return text
 
 class Worker(Thread):
     def __init__(self,tasks:Queue,lock:Lock,condition:Condition,id:int):
@@ -54,21 +61,6 @@ class Worker(Thread):
                 continue
             self.condition.release()
 
-            # query = "?q=%s&count=25"%(search_key)
-            # base_url = 'https://api.twitter.com/1.1/search/tweets.json'
-
-            # res = []
-            
-            # tweets = []
-            # locations = []
-            # for batch in self.crawler.tweet_stream(base_url,query):
-                
-            #     res.extend(batch)
-
-            # for i in res:
-            #     tweets.append(i['text'].lower())
-            #     locations.append(i['user']['location'])
-
             if os.path.exists(CWD+'\\results\\'+search_key+'.json'):
                 self.lock.acquire()
                 socketio.emit('result',{'id':search_key},room=client)
@@ -76,6 +68,12 @@ class Worker(Thread):
                 continue
 
             df = self.crawler.get_tweets(search_key)
+
+            df['location']=list(map(lambda x:x.split(',')[-1].lower(),df['location']))
+            df['tweet']=list(map(preprocess,df['tweet']))
+
+            wordCloudText=" ".join(df['tweet'])
+
 
             with self.graph.as_default():
                 prediction = np.array(list(map(lambda x:list(x).index(max(x)),self.sentimentAnalyser.performAnalysis(df['tweet']))))
@@ -85,10 +83,11 @@ class Worker(Thread):
 
             for i in range(len(df['location'])):
                 maps[prediction[i]][df['location'][i]]=maps[prediction[i]].get(df['location'][i],0)+1
-            map_loc=[['Location','Polarity','Count']]
+            map_loc=[]
             for i in maps:
                 map_loc.extend([[location,int(i),int(count)] for location,count in maps[i].items()])
-            
+            map_loc.sort(key=lambda x:x[-1],reverse=True)
+            map_loc=[['Location','Polarity','Count']]+map_loc
             res=np.unique(prediction,return_counts=True)
             counts=[["Polarity","Count"],["negative",int(res[1][0])],['positive',int(res[1][1])]]
 
@@ -99,8 +98,14 @@ class Worker(Thread):
 
             self.lock.acquire()
 
-            socketio.emit('result',{'id':search_key},room=client)
 
+            wordcloud = WordCloud(width=800, height=500, random_state=21, max_font_size=110).generate(wordCloudText)
+
+            plt.figure(figsize=(10, 7))
+            plt.imshow(wordcloud, interpolation="bilinear")
+            plt.axis('off')
+            plt.savefig(CWD+'\images\{}.png'.format(search_key))
+            socketio.emit('result',{'id':search_key},room=client)
             self.lock.release()
             continue
 
@@ -128,3 +133,21 @@ class ThreadPool:
 
     def put(self,task):
         self.tasks.put(task)
+
+class CleanerThread(Thread):
+    
+    def run(self):
+        while True:
+            path=CWD+"\\images"
+            now=time.time()
+            for f in os.listdir(path):
+                f = os.path.join(path, f)
+                if os.stat(f).st_mtime<now-86400:
+                    os.remove(f)
+            path=CWD+"\\results"
+            for f in os.listdir(path):
+                f=os.path.join(path, f)
+                if os.stat(f).st_mtime<now-86400:
+                    os.remove(f)
+            time.sleep(3600)
+            
