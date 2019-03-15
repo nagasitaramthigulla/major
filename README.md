@@ -10,3 +10,8 @@ run
 then run the following command
 
 >> run
+
+
+open locahost:8000 in browser
+
+in the query feild search for any keyword
