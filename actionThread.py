@@ -26,6 +26,7 @@ import time
 import json
 import re
 from wordcloud import  WordCloud
+from textblob import TextBlob 
 
 def preprocess(text):
     text=str(text).lower()
@@ -74,8 +75,8 @@ class Worker(Thread):
 
             wordCloudText=" ".join(df['tweet'])
 
-
             with self.graph.as_default():
+                # prediction = np.array(list(map(lambda x:x,self.sentimentAnalyser.performAnalysis(df['tweet']))))
                 prediction = np.array(list(map(lambda x:list(x).index(max(x)),self.sentimentAnalyser.performAnalysis(df['tweet']))))
                 pass
             

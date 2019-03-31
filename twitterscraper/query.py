@@ -177,7 +177,7 @@ def query_tweets_once(*args, **kwargs):
         return []
 
 
-def query_tweets(query, limit=500, begindate=dt.date.today()-dt.timedelta(days=100), enddate=dt.date.today(), poolsize=5, lang=''):
+def query_tweets(query, limit=500, begindate=dt.date.today()-dt.timedelta(days=100), enddate=dt.date.today(), poolsize=10, lang=''):
     no_days = (enddate - begindate).days
     if poolsize > no_days:
         # Since we are assigning each pool a range of dates to query,

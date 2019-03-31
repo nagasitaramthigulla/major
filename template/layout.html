@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Twitter Sentiment analysis</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <style>
+        footer {
+            bottom: 0;
+            padding: 10px;
+            position: absolute;
+            height: 4rem;
+        }
+
+        .page-container {
+            position: relative;
+            min-height: 100vh;
+        }
+
+        .content-wrap {
+            padding-bottom: 4rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page-container">
+        <div class="content-wrap">
+            <header>
+                <nav>
+                    <div class="nav-wrapper orange darken-3">
+                        <a href="#" class="brand-logo">Twitter Analysis</a>
+                        <ul id="nav-mobile" class="right hide-on-med-and-down">
+                            <li><a href="#">Home</a></li>
+                            <li><a href="#">About</a></li>
+                        </ul>
+                    </div>
+                </nav>
+            </header>
+            {% block content %}{% endblock %}
+        </div>
+        <footer>
+            <p>&copy;2019 BVRIT</p>
+        </footer>
+    </div>
+</body>
+
+</html>

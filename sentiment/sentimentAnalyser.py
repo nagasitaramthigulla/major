@@ -5,6 +5,9 @@ from keras.preprocessing.text import Tokenizer
 import pickle
 
 import ipdb
+from textblob import TextBlob
+import re
+
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
@@ -27,6 +30,8 @@ class SentimentAnalyser:
             self.tokenizer=pickle.load(f)
 
     def performAnalysis(self,tweets):
+        # tweets_pred=list(map(lambda tweet:TextBlob(' '.join(re.sub("(@[A-Za-z0-9]+)|([^0-9A-Za-z \t])|(\w+:\/\/\S+)", " ", tweet).split())).sentiment.polarity,tweets))
+        # prediction=list(map(lambda x:1 if x>0 else 0,tweets_pred))
         processedtweets = K.preprocessing.sequence.pad_sequences(self.tokenizer.texts_to_sequences(tweets),truncating='pre', padding='pre', maxlen=60)
         # ipdb.set_trace()
         prediction = self.model.predict(processedtweets)
