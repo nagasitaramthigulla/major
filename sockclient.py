@@ -1,7 +1,7 @@
 try:
     from __main__ import socketio,threadPool,request
 except:
-    from app import socketio,threadPool,request
+    from app_helper import socketio,threadPool,request
 
 client_dict = {}
 

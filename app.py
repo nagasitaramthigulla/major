@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request,send_from_directory
 from flask_socketio import SocketIO
+from flask_login import LoginManager,login_required
 
 import os
 import json
@@ -7,41 +8,17 @@ import json
 CWD=os.getcwd()
 os.environ['CWD']=CWD
 
-from actionThread import ThreadPool,CleanerThread
 
 import logging
 log = logging.getLogger('werkzeug')
-log.setLevel(logging.ERROR)
-
-
-threadPool=ThreadPool(3)
-cl=CleanerThread()
-cl.start()
+log.setLevel(logging.NOTSET)
+login_manager=LoginManager()
+login_manager.login_view = "login"
 
 app = Flask(__name__,template_folder='template')
+app.secret_key="Kawi12!Ea$4sD*"
 print(__name__)
+login_manager.init_app(app)
+import login_management
 
-@app.route('/')
-def webprint():
-    return render_template('socket_client.html') 
-
-@app.route('/images/<path:path>')
-def send_js(path):
-    return send_from_directory(CWD+'\images', path)
-
-@app.route('/res/<id>')
-def display(id):
-    with open(CWD+'\\results\\'+id+'.json') as f:
-        jsondata=f.read()
-    return render_template('result.html', id = id,jsondata=jsondata)
-
-@app.route('/results/<path:path>')
-def send_json(path):
-    return send_from_directory(CWD+'\\results',path)
-
-socketio = SocketIO(app)
-
-import sockclient
-
-if __name__=='__main__':
-    socketio.run(app)
+import app_helper
