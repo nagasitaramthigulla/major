@@ -1,6 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from app import login_manager,app
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////db/twtranlsys.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///'+app.config['CWD']+'/db/twtranlsys.db'
 db = SQLAlchemy(app)
 from flask_login import UserMixin,login_required,login_user,logout_user
 from flask import Response,redirect,render_template,request,abort

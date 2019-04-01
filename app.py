@@ -19,6 +19,7 @@ app = Flask(__name__,template_folder='template')
 app.secret_key="Kawi12!Ea$4sD*"
 print(__name__)
 login_manager.init_app(app)
+app.config['CWD']=CWD
 import login_management
 
 import app_helper
