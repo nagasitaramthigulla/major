@@ -2,7 +2,7 @@ from flask_sqlalchemy import SQLAlchemy
 from app import login_manager,app
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///'+app.config['CWD']+'/db/twtranlsys.db'
 db = SQLAlchemy(app)
-from flask_login import UserMixin,login_required,login_user,logout_user
+from flask_login import UserMixin,login_required,login_user,logout_user,current_user
 from flask import Response,redirect,render_template,request,abort
 
 #...
@@ -55,6 +55,9 @@ def user_loader(user_id):
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+
+    if current_user.is_authenticated:
+        return redirect(request.args.get("next","home"))
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']  
@@ -65,10 +68,12 @@ def login():
         else:
             return abort(401)
     else:
-        return render_template("login.html")
+        return render_template("login.html",login=True)
 
 @app.route("/signup",methods=['GET','POST'])
 def signup():
+    if current_user.is_authenticated:
+        return redirect(request.args.get("next","home"))
     if request.method=="POST":
         username = request.form['username']
         name = request.form['name']
@@ -81,7 +86,7 @@ def signup():
         login_user(user)
         return redirect(request.args.get("next","home"))
     else:
-        return render_template("signup.html")
+        return render_template("signup.html",login=True)
         
 
 @app.route("/logout")

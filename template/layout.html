@@ -7,6 +7,9 @@
 
     <!-- Compiled and minified JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script>
+        var base_url = 'http://' + document.domain + ':' + location.port;
+    </script>
     <style>
         footer {
             bottom: 0;
@@ -32,10 +35,15 @@
             <header>
                 <nav>
                     <div class="nav-wrapper orange darken-3">
-                        <a href="#" class="brand-logo">Twitter Analysis</a>
+                        <a href="" class="brand-logo">Twitter Analysis</a>
                         <ul id="nav-mobile" class="right hide-on-med-and-down">
-                            <li><a href="#">Home</a></li>
-                            <li><a href="#">About</a></li>
+                            <li><a href="" onclick="location.href=base_url+'/home'">Home</a></li>
+                            <li><a href="" onclick="location.href=base_url+'/about'">About</a></li>
+                            {% if login %}
+                            <li><a href="" onclick="location.href=base_url+'/login'">Login</a></li>
+                            {% else %}
+                            <li><a href="" onclick="location.href=base_url+'/logout'">Logout</a></li>
+                            {% endif %}
                         </ul>
                     </div>
                 </nav>

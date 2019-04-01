@@ -3,7 +3,6 @@
 
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
 <script type="text/javascript" charset="utf-8">
-    var textel = document.getElementById("text");
     var base_url = 'http://' + document.domain + ':' + location.port;
     var socket = io.connect(base_url);
     function makeid() {
@@ -54,6 +53,7 @@
 
 <script>
     const sendJson = () => {
+        var textel = document.getElementById("text");
         var text = textel.value;
         textel.value = "";
         socket.emit('json', { message: text, hash: hash });
@@ -61,6 +61,7 @@
 
     text = document.getElementById('text');
     text.addEventListener('keydown', (e) => {
+        var textel = document.getElementById("text");
         if (e.keyCode == 13 && textel.value != "") {
             sendJson();
         }

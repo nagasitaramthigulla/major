@@ -1,9 +1,51 @@
 {% extends "layout.html" %}
 {% block content %}
 <form action="" method="post">
-    username<input type=text name=username>
-    name<input type=text name=name>
-    password<input type=password name=password>
-    <p><input type=submit value="sign up">
+    <div class="container">
+        <div class="row">
+            <div class="col s12">
+                <div class="card white">
+                    <div class="card-content">
+                        <div class="row">
+                            <div class="col s3"></div>
+                            <div class="col s6">
+                                <div class="row">
+                                    <div class="input-field col s12">
+                                        <input type="text" id="username" name="username" class="validate"
+                                            placeholder="Enter your username here" autocomplete="off" />
+                                        <label for="username">username</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="input-field col s12">
+                                        <input type="text" id="name" name="name" class="validate"
+                                            placeholder="Enter your name here" autocomplete="off" />
+                                        <label for="name">name</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="input-field col s12">
+                                        <input type="password" id="password" name="password" class="validate"
+                                            placeholder="Enter your password here" autocomplete="off" />
+                                        <label for="username">password</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="input-field col s12">
+                                        <button class="waves-effect waves-light btn orange darken-3" type="submit">Sign
+                                            up</button>
+                                        <div class="waves-effect waves-light btn orange darken-3 right"
+                                            onclick="location.href=base_url+'/login'">login
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col s3"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </form>
 {% endblock %}
