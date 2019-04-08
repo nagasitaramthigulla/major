@@ -103,7 +103,7 @@ class Worker(Thread):
             self.lock.acquire()
 
             if wordCloudText=="" or wordCloudText==" ":
-                wordCloudText="No Results for "+search_key
+                wordCloudText="NoResultsfound"
 
 
             wordcloud = WordCloud(width=800, height=500, random_state=21, max_font_size=110).generate(wordCloudText)
