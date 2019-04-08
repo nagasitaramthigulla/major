@@ -9,7 +9,7 @@ client_dict = {}
 def greet(json):
     print(json)
     client_dict[json['hash']]=request.sid
-    socketio.emit('json',{'message':'client session id:'+request.sid})
+    socketio.emit('json',{'message':'client session id:'+request.sid},room=request.sid)
 
 @socketio.on('json')
 def handle_json(json):
