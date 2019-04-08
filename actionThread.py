@@ -90,7 +90,10 @@ class Worker(Thread):
             map_loc.sort(key=lambda x:x[-1],reverse=True)
             map_loc=[['Location','Polarity','Count']]+map_loc
             res=np.unique(prediction,return_counts=True)
-            counts=[["Polarity","Count"],["negative",int(res[1][0])],['positive',int(res[1][1])]]
+            res_d={}
+            for i in range(len(res[0])):
+                res_d[res[0][i]]=res[1][i]
+            counts=[["Polarity","Count"],["negative",int(res_d.get(0,0))],['positive',int(res_d.get(1,0))]]
 
             with open(CWD+'\\results\\'+search_key+".json",'w') as f:
                 json.dump({'search_key':search_key,'map':map_loc,'counts':counts},f)
