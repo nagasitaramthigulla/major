@@ -1,5 +1,6 @@
 from app import *
 from actionThread import ThreadPool,CleanerThread
+from flask_login import current_user
 
 
 threadPool=ThreadPool(3)
@@ -21,14 +22,18 @@ def send_js(path):
 
 @app.route('/res/<id>')
 def display(id):
-    with open(CWD+'\\results\\'+id+'.json') as f:
-        jsondata=f.read()
-    return render_template('result.html', id = id,jsondata=jsondata,login=False)
+    with open(CWD+'\\template\\mapapi.txt') as f:
+        api_key=f.read()
+    return render_template('result.html', id = id,api_key=api_key,login=False)
 
 @app.route('/results/<path:path>')
 @login_required
 def send_json(path):
     return send_from_directory(CWD+'\\results',path)
+
+@app.route('/about')
+def about():
+    return render_template('about.html',login=not current_user.is_authenticated)
 
 socketio = SocketIO(app)
 
