@@ -13,3 +13,7 @@ ipdb
 matplotlib
 pandas
 wordcloud
+tweepy
+textblob
+flask-sqlalchemy
+flask-login
